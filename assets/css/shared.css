@@ -1,0 +1,46 @@
+
+
+/* === Scaffolding ======================================== */ 
+div.unit-summary {
+  padding: 2rem;
+}
+
+/* === Typography ========================================= */ 
+
+p, td, th, li, label, legend, input, textarea, select, cite, blockquote, span, div {
+  font-family: Tahoma, sans-serif;
+  font-size: 1rem;
+  line-height: 155%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Verdana, sans-serif;
+  line-height: 130%;
+}
+
+h1 { font-size: 2rem; color: orange; }
+h2 { font-size: 1.65rem; color: green; margin-top: 3rem; }
+h3 { font-size: 1.8rem }
+h4 { font-size: 1.55rem }
+h5 { font-size: 1.35rem }
+h6 { font-size: 1.2rem }
+
+
+blockquote { 
+  background: #333; 
+  padding: 1.25rem 1rem .15rem 1.25rem; 
+}
+
+code {
+  font-family: monospace;
+  font-size: 1.2rem;
+  color: rgb(228, 228, 117);
+}
+
+div.homepage {
+  padding: 1rem 1rem 0 2rem;
+}
+
+div.homepage nav {
+  display: none;
+}

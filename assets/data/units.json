@@ -1,0 +1,20 @@
+[
+  { "name": "Unit 01: HTML/CSS", "ready": false },
+  { "name": "Unit 02: Advanced CSS", "ready": false },
+  { "name": "Unit 03: Javascript", "ready": false },
+  { "name": "Unit 04: Web APIs", "ready": true },
+  { "name": "Unit 05: Third Party APIs", "ready": false },
+  { "name": "Unit 06: Server APIs", "ready": false },
+  { "name": "Unit 09: NodeJS", "ready": false },
+  { "name": "Unit 10: OOP", "ready": true },
+  { "name": "Unit 11: Express", "ready": true },
+  { "name": "Unit 12: SQL", "ready": false },
+  { "name": "Unit 13: ORM", "ready": false },
+  { "name": "Unit 14: MVC", "ready": false },
+  { "name": "Unit 17: CS", "ready": false },
+  { "name": "Unit 18: NoSQL", "ready": false },
+  { "name": "Unit 19: PWA", "ready": false },
+  { "name": "Unit 20: React", "ready": false },
+  { "name": "Unit 21: MERN", "ready": false },
+  { "name": "Unit 22: State", "ready": false }
+]

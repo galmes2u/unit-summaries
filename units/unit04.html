@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <title>Unit 04 Summary</title>
+</head>
+<body>
+  <div class="viewport">
+  
+    <div class="unit-summary">
+
+      <h1>Unit Summary: 04 Web APIs</h1>
+
+      <h2>Key Concepts</h2>
+
+      <p>API stands for Application Programming Interface. When we use systems or code that has been developed by others, those developers decide which parts of their system or code we have access to, and how we access it. The parts that we have access to and the rules governing that access are the API for that system.</p>
+      
+      <p>In this unit, we look at the Web browser itself, and API it exposes for Javascript developers. In short, any Web browser makes a great many methods and properties available, so we can write code to make a Web page do whatever we need it to do.</p>
+
+
+      <h2>The Window Object</h2>
+      <p>The Window Object is the "highest-level" object available within the browser. Anything and everything we might have access to is contained somehere within that object. You can see everything exposed by the window object by running this code in a script.js file:  <code>console.log(window)</code></p>
+
+      <div class="build-table" data-subject="windowObj"></div>
+
+
+
+      <h2>The Document Object Model (DOM)</h2>
+
+      <p>When the browser receives html and css, it has to convert the information in those files to a structure it can work with more easily. It creates the **document object**, and uses that for all its internal "housekeeping" of the web page from that point forward. The Document Object Model not only stores the entire structure and content of a Web page, it also gives Javascript developers access to a wealth of properties and methods so we can affect the way the page looks and behaves:</p>
+
+      <div class="build-table" data-subject="docObj"></div>
+      
+
+      <h2>Callback Functions</h2>
+
+      <p>One of the most important concepts in Javascript development is the **callback function**. You will encounter it for the first time in Activities 09 and 10 (Intervals).</p>
+
+      <p>A callback function is a function that you write, and pass into another function. When that target function is finished with whatever it has to do, it can then execute your callback function. In many cases, the target function can also provide data to your callback function (which is the real benefit of using callback functions). An example of this is the **event listener** (see below).</p>
+
+      <div class="build-table" data-subject="callbackFns"></div>
+      
+      
+      <h2>Event Listeners</h2>
+      
+      <p>As developers, many times we want something to happen on a Web page in response to something the user does. So we tell Javscript to listen for a specific event when it occurs on a specific element on the page. Consider this code:</p>
+      
+      <blockquote>
+        <code>
+          <pre>var myButton = document.querySelector("button");
+            var hiddenDiv = document.querySelector(".special-offer");
+            
+            myButton.addEventListener("click", function(event){
+              hiddenDiv.setAttribute("style", "display: block;");
+            })</pre>
+          </code>
+        </blockquote>
+        
+        <p>In this example, when the user clicks the button, we make a previously-hidden div tag visible on the page.</p>
+        
+        <p>Event Listeners also provide to our callback functions the **Event Object**. The Event Object is an object which provides to our code all the information about whatever event just got triggered. The most important part of the event object (usually) is target of the event; i.e: the element on the web page which received the event. In the example above, the event target would e the button that was clicked.</p>
+        
+        <div class="build-table" data-subject="eventListeners"></div>
+        
+        
+        <h2>Event Bubbling</h2>
+        
+        <p>When an event occurs anywhere in the DOM, Javascript automatically "bubbles" that event upward in case any parent elements have a listener for the same event. This usually causes no issues, unless you've written an event listener for a parent element that matches the same event, but has different instructions for that event. In any case, if you ever want to be sure that event bubbling doesn't happen, the event object is your friend. In your event listener callback, simply put: <code>event.stopPropagation()</code>.</p>
+        
+        <div class="build-table" data-subject="eventBubbling"></div>
+
+
+      <h2>Local Storage</h2>
+
+      <p>Every browser built into it a convenient way of storing small-to-medium size pieces of data: Local Storage. With Local Storage, you can store any string or numeric value, simply by assigning it a reference key.</p>
+
+      <p>Example:</p>
+      <blockquote>
+        <code>
+<pre>localStorage.setItem("username", "frodobaggins")</pre>
+        </code>
+      </blockquote>
+
+      <p>Don't forget that you can also store complex data such as arrays and objects as long as you stringify them first. This puts them into a format called **JSON** which you'll encounter a lot in your JS learning.</p>
+
+      <p>Stringify example:</p>
+
+      <blockquote>
+        <code>
+<pre>var obj = { name: "Frodo", location: "The Shire" };
+localStorage.setItem("user", JSON.stringify(obj));</pre>
+        </code>
+      </blockquote>
+
+      <p>And, of course, to get a value out of Local Storage, use the <code>getItem()</code> method:</p>
+      
+      <blockquote>
+        <code>
+<pre>var user = localStorage.getItem("user")</pre>
+        </code>
+      </blockquote>
+      
+
+      <div class="build-table" data-subject="localStorage"></div>
+
+      <h2>Important Code To Know</h2>
+
+    <blockquote>
+      <code>
+        <pre>document.createElement()
+document.querySelector()
+document.querySelectorAll()
+getAttribute()
+setAttribute()
+appendChild()
+event.preventDefault()
+event.stopPropagation()
+localStorage.getItem()
+localStorage.setItem()</pre>
+      </code>
+    </blockquote>
+    </div>
+
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/units.js"></script>
+  <script src="../assets/js/svg.js"></script>
+  <script src="../assets/js/tables.js"></script>
+  <script src="../assets/js/shared.js"></script>
+</body>
+</html>

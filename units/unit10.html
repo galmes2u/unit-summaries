@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <title>Unit 10 Summary</title>
+</head>
+<body>
+  <div class="viewport">
+
+    <div class="unit-summary">
+
+      <h1>Unit Summary: 10 OOP (Object-Oriented Programming)</h1>
+
+      <h2>Key Concepts</h2>
+
+      <p>OOP is based on a relatively simple concept: every application is a collection of resources; such as Customers, Orders, Products, etc. By defining Classes around these resources, we allow each class, and the objects made from it, to manage all the needs of each resource.</p>
+
+      <h2>Constructor Functions</h2>
+      <p>Under the hood, Javascript handles classes and inheritance differently than most other languages. But the end result is the same. Constructor functions are used to define a "template" for all objects that will be used for a specific resource. Constructor functions define the properties that each resource keeps track of, and the methods used to manipulate that information.</p>
+      <p>Here is an example of a Constructor function:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+function Customer(name, email, location){
+  this.name = name;
+  this.email = email;
+  this.location = location;
+
+  this.sendOffer = function(){
+    // send an offer to this customer
+  }
+
+  this.getOrderHistory = function(){
+    // get order history for this customer
+  }
+}
+</pre>
+</code>
+      </blockquote>
+
+      <p>To create, or instantiate an object from this Constructor, we use the <em>new</em> operator, and we provide whatever data the constructor function needs:</p>
+
+      <blockquote><code><pre>const cust = new Customer("Bob", "bob@gmail.com", "Las Vegas");</pre></code></blockquote>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Activities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Constructor Functions</td>
+            <td>01, 02</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <h2>Prototypes</h2>
+
+      <p>When Javascript <em>instantiates</em> an object from a constructor function, that object also inherits the <em>prototype</em> from the constructor. The prototype binds the constructor and all objects instantiated from it, so that anytime the prototype is modified, all objects inherit those changes.</p>
+
+      <p>This makes it possible to extend classes (or constructor functions) that you didn't personally author by building onto the prototype instead. This can be a very powerful tool when used well.</p>
+
+      <p>For example, we can add a new method onto all String objects that allows us to capitalize the first letter only:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+String.prototype.capFirstLetter = function(){
+  return this.charAt(0).toUpperCase() + this.substring(1)
+}
+
+const testString = "hello!"
+console.log( testString.capFirstLetter() )  // produces "Hello!"
+          </pre>
+        </code>
+      </blockquote>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Activities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prototypes</td>
+            <td>03, 04</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <h2>Classes</h2>
+
+      <p>Because Javascript's built-in way of handling inheritance is so different from most other languages, it eventually adopted a new syntax to make it easier for others to work with inheritance. The Class syntax in Javascript doesn't do anything that Constructor functions and prototypes cannot do; it makes doing these things a bit easier.</p>
+
+      <p>Here is an example of a Class definition:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+class Customer {
+  constructor(name, email, location){
+    this.name = name;
+    this.email = email;
+    this.location = location;
+  }
+
+  sendOffer(){
+    // sends an offer
+  }
+
+  getOrderHistory(){
+    // gets order history
+  }
+}
+</pre>
+</code>
+      </blockquote>
+
+      <p>Objects are instantiated the same way with classes as with constructor functions:</p>
+
+      <blockquote><code><pre>const cust = new Customer("Bob", "bob@gmail.com", "Las Vegas");</pre></code></blockquote>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Activities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Classes</td>
+            <td>05, 06</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+      <h2>Inheritance</h2>
+
+      <p>One of the strengths of OOP development is that classes can inherit from each other. Properties and methods which are shared among many types of resources can be accessed via parent classes; more specific properties and methods can be placed in child classes.</p>
+
+      <p>Consider this parent class:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+class Animal {
+  constructor(type, habitat, sound, diet){
+    this.type = type;
+    this.habitat = habitat;
+    this.sound = sound;
+    this.diet = diet;
+  }
+
+  makeSound(){
+    console.log(this.sound)
+  }
+}
+</pre>
+</code>
+      </blockquote>
+
+      <p>The Animal class contains all properties and methods shared by all kinds of animals. But as we start working with this, we realize some animals have specific types of needs:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+class Bird extends Animal {
+  constructor(type, habitat, sound, diet, wingspan){
+    super(type, habitat, sound, diet)
+    this.wingspan = wingspan
+  }
+
+  fly(){
+    // do some flying!
+  }
+}
+</pre>
+</code>
+      </blockquote>
+
+      <p>In this example, objects made from the Bird class still get all the properties and methods from the parent Animal class, but they also get specific properties and methods.</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Activities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inheritance</td>
+            <td>07, 08</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <h2>Unit Testing</h2>
+
+      <p>Because development is done in groups a great deal of the time, we have a need to be able to regularly test our code, to be sure that changes made by others (or even us) don't cause problems. Unit Testing tests code at the smallest testable level: the function. We use it to verify that the functions and methods we write always perform as expected.</p>
+
+      <p>It's important to remember that the job of Unit Testing isn't to predict all the ways in which the code may be ececuted. That's the job of the code itself. It's the job of Unit Tests to verify the functionality that the code supports &mdash; nothing more.</p>
+
+      <p>We use the software package Jest for Unit Testing, and it should be installed as a dev dependency in any project we use it for. It also helps to make an entry in the <em>package.json</em> file so that jest can be run simply by running <code>npm run test</code>.</p>
+
+      <p>Here's an example of a unit test:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+  describe('Calculator Functions', () => {
+    describe('sum', () => {
+      it('should take two numbers and add them together', () => {
+        const total = 4;
+        const calc = new Calculator();
+        expect(calc.sum(2, 2)).toEqual(total);
+      })
+  
+      it('should support only one number being provided', () => {
+        const calc = new Calculator();
+        expect(calc.sum(5)).toEqual(10);
+      })
+    });
+  });
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>Remember that the unit test does not need to whatever work the function does. When writing a unit test, we tell Jest what a successful result should look like based on certain inputs. Jest then tests with those inputs and can determine if the function passed the test.</p>
+
+      <div class="build-table" data-subject="unitTesting"></div>
+
+
+      <h2>Test-Driven Development (TDD)</h2>
+
+      <p>Test-Driven Development (TDD) is a philosophy that says better code can be written if the tests for that code are generated first. The tests act as de facto requirements for the code; and the code can then be written to pass every test, which generally ensures proper-functioning code &mdash; assuming, of course, that the tests are well crafted!</p>
+
+      <p>When developing software in this way, it's critical to carefully read the tests and understand what is being expected of the software. As you start coding, you will run tests quite often, and fail those tests most of the time, until you arrive at functioning code.</p>
+
+      <div class="build-table" data-subject="tdd"></div>
+
+
+      <h2>Promises, Promises</h2>
+
+      <p>Much of the software we interact with is asynchronous &mdash; which means that it does not require our code to wait around for a response. Instead, we can have our code do other things, and then "circle back" when the response is received.</p>
+
+      <p>This capability is achieved because of Promises. When we use asynchronous software, such as fetch, that software doesn't send the real response right away; instead it sends a Promise. This Promise is an indicator to the code we have that it doesn't need to stop and wait. Promises prevent code from "bottle-necking" while waiting for data.</p>
+
+      <p>You can enable Promises in any of your code, so that when a function you're written is called, it can be used asynchronously and not cause any bottle-necking.</p>
+
+      <p>Here's an example of a function that returns a Promise at first, and then resolves that Promise once the real data is ready:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+const doAReallyBigThing = new Promise((resolve, reject) => {
+    //... do the really big thing here
+    if( reallyBigThing is successful ){
+      resolve(reallyBigData)
+    } else {
+      reject(reallyBigMistake)
+    }
+  })
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>The key to Promises are the <em>resolve</em> and <em>reject</em> methods. The resolve method sends a successful final response back to wherever your function was called from; a reject sends back an error.</p>
+
+      <div class="build-table" data-subject="promises"></div>
+
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/units.js"></script>
+  <script src="../assets/js/svg.js"></script>
+  <script src="../assets/js/tables.js"></script>
+  <script src="../assets/js/shared.js"></script>
+</body>
+</html>

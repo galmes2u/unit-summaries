@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <title>Unit 11 Summary</title>
+</head>
+<body>
+  <div class="viewport">
+
+    <div class="unit-summary">
+
+      <h1>Unit Summary: 11 Express</h1>
+
+      <h2>Key Concepts</h2>
+
+      <p>Now that we have a basic understading of getting a server to work in a general sense, it's time to put it to specific use. We're going to make a web server so we can publish web content to the world. For that, we need a Node package called Express. Express turns your normal Node server into a machine that can listen for, and respond to, web requests.</p>
+
+      <h2>The Server File</h2>
+      <p>With Express, everything begins with the <code>server.js</code> file. Here we require the Express package and get it set up for use. You can find a standard Express boilerplate here.</p>
+
+      <div class="build-table" data-subject="expressSetup"></div>
+
+
+
+      <h2>Route Listeners</h2>
+
+      <p>Like most server software, Express usually just sits around and waits for a request. But in this case, we must tell express exactly what kinds of requests it's allowed to respond to. We do this with route listeners. A standard listener looks something like this:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/api/product", (req, res) => {
+  res.status(200).json({ status: "success", data: productDataHere })
+})
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>The .get() method tells Express that this route requires the GET method to be used. Further, the address of the route must be <em>/api/product</em>. Only when these two conditions are met will Express do whatever is in the callback function.</p>
+
+      <div class="build-table" data-subject="routeListeners"></div>
+
+
+      <h2>The Request and Response Objects</h2>
+
+      <p>With each callback function you create, Express provides you with two pre-made objects in case you need them. These are typically referred to by the labels <code>req</code> and <code>res</code>, but you label them however you want.</p>
+
+      <p>The Request Object (req) gives you access to everything you would ever need to know about the request that is being responded to at that moment. It is very similar in scope to the event object on the client side.</p>
+
+      <p>The Response Object (res) gives a suite of methods you can use to send back a response to wherever the request originated from.</p>
+
+      <div class="build-table" data-subject="reqResponse"></div>
+
+
+      <h2>Special Query Parameters (Wildcards)</h2>
+
+      <p>In building a web server, especially when serving up api data, you can end up with a lot of routes that are almost identical. Rather than create dozens (or more!) of routes that look so much alike, we can inject wildcards into our route listeners. Example:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/api/product/:id", (req, res) => {
+  const data = products.find( prod => prod.id === req.params.id )
+  res.status(200).json({ status: "success", data: data })
+})
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>In this example, we expect to receive lots of api calls for product data, and each product has its own unique id. So we have created an id wilcard in the route (see the <code>:id</code> at the end of the route path). This route listener will now respond to any route that begins with <em>/api/product/</em>, and will assume that what follows is the id variable.</p>
+
+      <p>You can access real value of the id via the request object, by using <code>req.params.id</code>. The <em>id</em> variable name can be whatever you want it to be.</p>
+
+      <p>Notice how in the route callback we can look up product data based on that id and send back the correct info. We can now provide api data for unlimited products with one route listener.</p>
+
+      <div class="build-table" data-subject="routeWildcards"></div>
+
+
+
+      <h2>The Static Assets Folder</h2>
+
+      <p>A web server typically serves up a lot more than just html pages and JSON data. It's also asked to serve up CSS files, JS files, images, and more. But writing route listeners for all those would be a major chore.</p>
+
+      <p>Instead, we can tell Express that we have a special, public-access folder, and that requests for files in that folder can be accepted without a specific route listener. This just requires one line of code:</p>
+
+      <blockquote><code><pre>app.use(express.static('public'));</pre></code></blockquote>
+
+      <p>Here we are designating the directory named <em>public</em> as the one where all static assets are stored.</p>
+
+      <blockquote class="tip">
+        <p>Big Tip</p>
+        <p>It can sometimes be confusing keeping track of what files will be running on the server, and which will run on the browser. If you put all client-side files in the public folder, it may help you mentally separate the two environments. You can even name that folder <em>client</em> instead of <em>public if you want!</em></p>
+      </blockquote>
+
+      <div class="build-table" data-subject="staticAssets"></div>
+
+      <h2>Handling Data Submissions</h2>
+
+      <p>So far, you've only asked Express to respond to GET requests, which are requests where Express simply has to send back data of some kind. But you will sometimes need your web site visitors to <em>send</em> you information, usually via forms.</p>
+
+      <p>This is done via either the POST or the PUT method. The POST method is for submissions where new data is being sent; the PUT method is used for data where an existing record is being updated.</p>
+
+      <p>To respond to these requests, you first need to make sure your route listener is referencing either <code>app.post()</code> or <code>app.put()</code>. You also need to tell Express that it's allowed to parse data that is sent in this manner. You do that with these lines of code in your <em>server.js</em> file:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>Finally, in the route callback function, you can find the data that was submitted in the request object as shown below:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.post("/api/product", (req, res) => {
+  const data = req.body
+  res.status(200).json({ status: "success", msg: "You post was received!" })
+})
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="postAndPut"></div>
+
+      
+      <h2>Modular Routing</h2>
+
+      <p>Over time, you will be adding many more routes to your application code, and managing all these routes can become very difficult if they're all in the same file.</p>
+
+      <p>Modular routing lets us divide our routes according to the resources they belong to. You will find later on that this makes it <strong>very</strong> easy to rapidly produce the basic scaffolding of any API you need to build.</p>
+
+      <p>To enable modular routing, you will import the Express Router into any files along the route chain and have it now manage your routes. See the example below:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+const router = require("express").Router()
+
+router.get("/product", (req, res) => {
+  //... 
+})
+
+module.exports = router
+          </pre>
+        </code>
+      </blockquote>
+
+
+      <div class="build-table" data-subject="modularRouting"></div>
+
+
+
+    </div>
+
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/units.js"></script>
+  <script src="../assets/js/svg.js"></script>
+  <script src="../assets/js/tables.js"></script>
+  <script src="../assets/js/shared.js"></script>
+</body>
+</html>
