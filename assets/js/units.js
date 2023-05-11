@@ -11,7 +11,7 @@ const units = [
   { name: "Unit 09: NodeJS", href: "09.html", ready: false },
   { name: "Unit 10: OOP", href: "10.html", ready: true },
   { name: "Unit 11: Express", href: "11.html", ready: true },
-  { name: "Unit 12: SQL", href: "12.html", ready: false },
+  { name: "Unit 12: SQL", href: "12.html", ready: true },
   { name: "Unit 13: ORM", href: "13.html", ready: false },
   { name: "Unit 14: MVC", href: "14.html", ready: false },
   { name: "Unit 17: CS", href: "17.html", ready: false },

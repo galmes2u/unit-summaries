@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <title>Unit 11 Summary</title>
+</head>
+<body>
+  <div class="viewport">
+
+    <div class="unit-summary">
+
+      <h1>Unit Summary: 12 SQL</h1>
+
+      <h2>Key Concepts</h2>
+
+      <p>SQL stands for Structured Query Language, and it is one of the industry standards for working with databases. There are many flavors of SQL, in our cohort you work with the most popular one, MySQL. Others include MS SQL Server, Oracle, Maria, and Postgres.</p>
+
+      <h2>The .sql File</h2>
+      <p>We will do most of our initial coding in a .sql file, so that we can easily make changes over time. The .sql file is just a text file specific to the SQL syntax.</p>
+
+      <p>When writing SQL, you'll use many of the same commands over and over again. Here's some of the more common ones:</p>
+
+      <blockquote>
+        <p>Deletes the existing database (db_name) and creates another in its place:</p>
+        <code>
+          <pre>
+            DROP DATABASE IF EXISTS &#60;db_name&#62;;
+            CREATE DATABASE &#60;db_name&#62;;
+          </pre>
+        </code>
+  
+
+        <p>Identifies for SQL the database being referred to in future statements.</p>
+        <code>
+          <pre>
+            USE &#60;db_name&#62;;
+          </pre>
+        </code>
+
+
+        <p>Creates a new table named table_name.</p>
+        <code>
+          <pre>
+            CREATE TABLE &#60;table_name&#62;;
+          </pre>
+        </code>
+
+
+        <p>Selects all rows, and all columns in each row. It's considered a poor practice to select all columns when all aren't needed.</p>
+        <code>
+          <pre>
+            SELECT * FROM &#60;table_name&#62;;
+          </pre>
+        </code>
+
+        
+        <p>Selects the name and age fields from each row, but only for those records where age is greater than 20.</p>
+        <code>
+          <pre>
+            SELECT name, age FROM &#60;table_name&#62;
+            WHERE age > 20;
+          </pre>
+        </code>
+
+
+        <p>Inserts a new record into table table_name. The record's name field will be set to John, and the age field will be set to 35. Insert statements only need to reference the columns for which data is being provided.</p>
+        <code>
+          <pre>
+            INSERT INTO &#60;table_name&#62; (name, age)
+            VALUES("John", 35);
+          </pre>
+        </code>
+
+
+        <p>Updates an existing record in table table_name. The WHERE clause specifies which record(s) should be updated.</p>
+        <code>
+          <pre>
+            UPDATE &#60;table_name&#62;
+            SET age = 36
+            WHERE name = 'Bob';
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="sqlBasics"></div>
+
+
+
+      <h2>The mysql2 Package</h2>
+
+      <p>Working with .sql files can be a nuisance, and it affords us no ability to integrate database operations into our code. For this, we have the <em>mysql2</em> node package.</p>
+
+      <p>With mysql2, we can now inject sql queries into our express route listeners. The example below is listening for a request for all products. It queries the database for all the products and sends the response back to the client.</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/api/products", (req, res) => {
+  db.query('SELECT * FROM products', function (err, results) {
+    res.status(200).json({results})
+  });
+})
+          </pre>
+        </code>
+      </blockquote>
+
+      <p>When allowing outside users to query our databases, we can accidentally create major security issues. If queries that come from the outside world are allowed into our database, bad things can happen.</p>
+
+      <p>The mysql2 package prevents this with prepared statements. Prepared statements indicate to mysql2 where the potentially harmful code may be, so mysql2 can then sanitize it prior to executing it.</p>
+
+      <blockquote>
+        <p>Here we are telling the mysql2 package that the id number of the record to be deleted may not be genuine. So mysql2 instead analyzes and 'escapes' that value, making it safe for database entry.
+        <code>
+          <pre>
+app.delete("/api/products/:id", (req, res) => {
+  db.query('DELETE FROM products WHERE id = ?', req.params.id, function (err, results) {
+    res.status(200).json({results})
+  });
+})
+          </pre>
+        </code>
+        </p>
+      </blockquote>
+
+      <div class="build-table" data-subject="mysql2"></div>
+
+
+
+      <h2>Foreign Keys and JOIN Statements</h2>
+
+      <p>Relational databases get their power from being able to combine data from multiple tables into meaningful output. This is accomplished through the use of PRIMARY and FOREIGN keys, and JOIN statements.</p>
+
+      <p>The <strong>PRIMARY KEY</strong> is a non-duplicating, unique identifier for every record in a table. In MySQL, it's usually an auto-incrementing number. The primary key helps MySQL index the contents of a table in an optimized way.</p>
+
+      <p>A FOREIGN KEY establishes a relationship between one table and another. For example, we may have two tables, one for Teachers and one for Departments. Each teacher belongs to a single department. So in the Teacher table, we may have a foreign key named department_id. This contains the primary key value of the department to which the teacher belongs. Foreign keys are an index value that refers to a primary key in another table. </p>
+
+      <p>When writing queries, we use JOIN statements to tell SQL how to "bridge" the information in two or more tables together. Using the example above, we might write a JOIN query like this:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+SELECT teacher.name, department.name 
+FROM teachers 
+INNER JOIN ON departments WHERE teachers.department_id = department.id
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="joins"></div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/units.js"></script>
+  <script src="../assets/js/svg.js"></script>
+  <script src="../assets/js/tables.js"></script>
+  <script src="../assets/js/shared.js"></script>
+</body>
+</html>

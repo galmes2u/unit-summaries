@@ -51,6 +51,15 @@ const tableData = {
   ],
   modularRouting: [
     { subject: "Modular Routing", units: "21, 22" }
+  ],
+  sqlBasics: [
+    { subject: "SQL Basics", units: "03 through 10" }
+  ],
+  mysql2: [
+    { subject: "The mysql2 Package", units: "11 through 22" }
+  ],
+  joins: [
+    { subject: "Foreign Keys &amp; Joins", units: "19, 20 and 25, 26" }
   ]
 }
 
