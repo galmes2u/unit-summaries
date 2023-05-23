@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <title>Unit 11 Summary</title>
+</head>
+<body>
+  <div class="viewport">
+
+    <div class="unit-summary">
+
+      <h1>Unit Summary: 13 ORM</h1>
+
+      <h2>Key Concepts</h2>
+
+      <p>ORM stands for Object Relational Mapper, which sounds a lot more complex than it is. ORMs act as an intermediary between the coder and the database language (such as SQL). By telling the ORM the nature of your tables and the data inside them, the ORM can then handle the building of the tables, and almost all of the query-writing, for you.</p>
+
+      <p>We will be using a SQL-based ORM called Sequelize for handling our SQL queries.</p>
+
+      <h2>The Model</h2>
+      <p>The heart of any ORM is the Model. A Model is a detailed description of a given resource you are managing data for; i.e: products, customers, orders, etc. Like all ORMs, Sequelize uses the model as the blueprint for how to build each table in your database.</p>
+
+      <div class="build-table" data-subject="sequelizeModels"></div>
+
+
+      <h2>Syncing Sequelize with Your Database</h2>
+
+      <p>It's important to always remember that Sequelize is now in charge of your tables. If you make any changes to your Model, Sequelize will need to rebuild the tables to reflect those changes.</p>
+
+      <p>Make sure, when you load up Sequelize in your server.js file, that you have the sync option set to true while you are in development.</p>
+
+
+      <h2>Queries</h2>
+
+      <p>Once Sequelize has your Model definitions, and has created your tables, it's ready to now handle the writing of your queries. ORM queries are intended to look and behave like everything else in Javascript: using constructs such as objects, arrays, async/await, etc.</p>
+
+      <p>Whenever you pass data into an ORM, you pass it in using the same data types you already work with: usually objects or arrays.</p>
+
+      <p>Here are samples of the key query types you can use Sequelize for, wrapped inside an Express route listener:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/", async (req, res) => {
+  const data = await Product.find()
+  res.status(200).json({ products: data })
+})
+
+app.get("/:id", async (req, res) => {
+  const data = await Product.findByPk(req.params.id)
+  res.status(200).json({ product: data })
+})
+
+app.post("/", async (req, res) => {
+  const newItem = await Product.create(req.body)
+  res.status(200).json({ product: newItem })
+})
+
+app.put("/:id", async (req, res) => {
+  const data = await Product.update({
+    req.params.body,
+    where: { id: req.params.id }
+  })
+  res.status(200).json({ updatedProduct: data })
+})
+
+app.delete("/:id", async (req, res) => {
+  const data = await Product.delete({
+    where: { id: req.params.id }
+  })
+  res.status(200).json({ deleted: true })
+})
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="sequelizeQueries"></div>
+
+
+      <h2>Validations and Constraints</h2>
+
+      <p>Sequelize also lets you specify validations and constraints for each model, to help ensure that any data going into your database matches the kind of data you expect.</p>
+
+      <p>Constraints are rules built into the database engine itself, such as whether to allow NULL values. Constraints are enforced at the database level also; Sequelize simply sets the correct flags.</p>
+
+      <p>Validations are created and enforced by Sequelize. They offer a huge range of data-sanitizing options.</p>
+
+      <p>Here's an example of a User model with constraints and validations:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,   // constraint
+    validate: {
+      isAlphanumeric: true,
+    },
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,  // constraint
+    validate: {
+      isEmail: true,
+    },
+  }
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="sequelizeValidation"></div>
+
+
+      <h2>Hooks</h2>
+
+      <p>Hooks are operations you can tell Sequelize to perform at specific points in the operations of your models. The two most common hooks are preSave and preUpdate, as they allow you to modify incoming data in some way before it goes into the table. Hooks are defined in the model's config object, which is loaded right after all the column data is defined.</p>
+
+      <p>Below is an example of using hooks to encrypt a password before it's saved in the table:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+  hooks: {
+    beforeCreate: async (newUserData) => {
+      newUserData.password = await bcrypt.hash(newUserData.password, 10);
+      return newUserData;
+    },
+    beforeUpdate: async (updatedUserData) => {
+      if (updatedUserData.password) {
+      updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+      }
+      return updatedUserData;
+    },
+  },
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="sequelizeHooks"></div>
+
+      <h2>Defining Relationships</h2>
+
+      <p>When you need to run a query where two or more models are related to each other, you have to define for Sequelize the nature of that relationship. In other words, if a given model has a foreign key set up pointing to another model, Sequelize needs to know if this is a one-to-one, one-to-many, or many-to-many relationship.</p>
+
+      <p>We define these relationships in the <em>models/index.js</em> file. Here we import all the models we are working with, and attach to each model whatever method defines the relationship. See below:</p>
+
+      <p style="margin-top: 3rem;"><strong>One-To-One</strong></p>
+      <p>Here we have a Driver, and each Driver owns just one Car. In this case, the foreign key could be on either model, but we'll assume it's on the Car model. So the Car model has a column named <code>driver_id</code>.</p>
+
+      <blockquote>
+        <code>
+          <pre>
+Driver.hasOne(Car, {
+  foreignKey: 'driver_id',
+  onDelete: 'CASCADE',
+});
+
+Car.belongsTo(Driver, {
+  foreignKey: 'driver_id',
+});
+          </pre>
+        </code>
+      </blockquote>
+
+
+      <p style="margin-top: 3rem;"><strong>One-To-Many</strong></p>
+      <p>Here we have a Driver, and each Driver can own many Cars. In this case, the foreign key MUST be on the Car model. So the Car model has a column named <code>driver_id</code>.</p>
+
+      <blockquote>
+        <code>
+          <pre>
+Driver.hasMany(Car, {
+  foreignKey: 'driver_id',
+  onDelete: 'CASCADE',
+});
+
+Car.belongsTo(Driver, {
+  foreignKey: 'driver_id',
+});
+          </pre>
+        </code>
+      </blockquote>
+
+
+      <p style="margin-top: 3rem;"><strong>Many-To-Many</strong></p>
+      <p>Imagine a driving club or something like that, where any driver can sign up for multiple group outings. In this case, we have a situation where many Drivers can be associated with many Trips, and these Trips can all have multiple Drivers. This is a many-to-many relationship.</p>
+      <p>To make this work we first need to create a model to join the Driver(s) with the associated Trip(s). We'll call this third model TripGroup. In this model we will have foreign keys for <code>driver_id</code> and <code>trip_id</code>. Of course we will also have a Trip model with details about each trip.</p>
+      <p>The definitions file would look like this:</p>
+
+      <blockquote>
+        <code>
+          <pre>
+Driver.belongsToMany(Trip, {
+  through: {
+    model: TripGroup,
+    unique: false
+  },
+  as: "scheduled_trips"
+});
+
+Trip.belongsToMany(Driver, {
+  through: {
+    model: TripGroup,
+    unique: false
+  },
+  as: "driver_list"
+});
+          </pre>
+        </code>
+      </blockquote>
+
+      <h2>Writing Queries for Related Models</h2>
+
+      <p>So we've created our models, and defined the relationships between them. The final step is to tell Sequelize to join all this data together. We do that when we write our model queries in the route or controller.</p>
+
+      <p style="margin-top: 3rem;"><strong>One-To-One and One-To-Many Query</strong></p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/driver", async (req, res) => {
+  const result = await Driver.findAll({
+    include: [{ model: Car }],
+  });
+});
+          </pre>
+        </code>
+      </blockquote>
+
+
+      <p style="margin-top: 3rem;"><strong>Many-To-Many Query</strong></p>
+
+      <blockquote>
+        <code>
+          <pre>
+app.get("/driver/:id", async (req, res) => {
+  const result = await Driver.findByPk( req.params.id, {
+    include: [{ model: Trip, through: TripGroups, as: 'scheduled_trips' }]
+  });
+});
+          </pre>
+        </code>
+      </blockquote>
+
+      <div class="build-table" data-subject="sequelizeRelationships"></div>
+
+    </div>
+
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/units.js"></script>
+  <script src="../assets/js/svg.js"></script>
+  <script src="../assets/js/tables.js"></script>
+  <script src="../assets/js/shared.js"></script>
+</body>
+</html>

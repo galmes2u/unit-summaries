@@ -60,6 +60,21 @@ const tableData = {
   ],
   joins: [
     { subject: "Foreign Keys &amp; Joins", units: "19, 20 and 25, 26" }
+  ],
+  sequelizeModels: [
+    { subject: "Models", units: "01 through 04" }
+  ],
+  sequelizeQueries: [
+    { subject: "Queries", units: "05 through 12" }
+  ],
+  sequelizeValidation: [
+    { subject: "Constraints/Validators", units: "13 and 14" }
+  ],
+  sequelizeHooks: [
+    { subject: "Constraints/Validators", units: "17 and 18" }
+  ],
+  sequelizeRelationships: [
+    { subject: "Model Relationships", units: "21 through 24" }
   ]
 }
 
